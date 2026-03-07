@@ -64,9 +64,9 @@ const CreateTripEvent = () => {
     price: "0", price_child: "0", available_tickets: "0", email: "", phone_number: "",
     map_link: "", is_custom_date: false, type: "trip" as "trip" | "event",
     latitude: null as number | null, longitude: null as number | null,
-    // ✅ Default to 24h — OperatingHoursSection reads "00:00"/"23:59" and shows toggle as ON
     opening_hours: "00:00",
     closing_hours: "23:59",
+    flexible_duration_months: "3", // How many months from publish the flexible trip stays active
   });
 
   const [workingDays, setWorkingDays] = useState<WorkingDays>({ Mon: true, Tue: true, Wed: true, Thu: true, Fri: true, Sat: true, Sun: true });
@@ -241,6 +241,28 @@ const CreateTripEvent = () => {
                 <div className="flex items-center space-x-3 bg-slate-50 p-4 rounded-2xl">
                   <Checkbox id="custom_date" checked={formData.is_custom_date} onCheckedChange={(checked) => setFormData({...formData, is_custom_date: checked as boolean})} />
                   <label htmlFor="custom_date" className="text-[11px] font-black uppercase tracking-tight text-slate-500 cursor-pointer">Flexible dates - Open availability</label>
+                </div>
+              )}
+              {formData.is_custom_date && (
+                <div className="space-y-3 bg-slate-50 p-4 rounded-2xl">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Listing Duration (from publish date) *</Label>
+                  <p className="text-[10px] text-slate-400">Choose how long this flexible trip will be available for booking. Maximum 12 months.</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[1, 2, 3, 4, 5, 6, 9, 12].map((months) => (
+                      <button
+                        key={months}
+                        type="button"
+                        onClick={() => setFormData({...formData, flexible_duration_months: String(months)})}
+                        className={`p-3 rounded-xl text-center transition-all font-black text-xs uppercase tracking-tight ${
+                          formData.flexible_duration_months === String(months)
+                            ? 'bg-[#008080] text-white shadow-lg'
+                            : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >
+                        {months} {months === 1 ? 'Month' : 'Months'}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
               {!formData.is_custom_date && (
