@@ -1,5 +1,6 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useIsPwa } from "@/hooks/useIsPwa";
 
 interface ThemeToggleProps {
   variant?: "default" | "nav";
@@ -7,6 +8,10 @@ interface ThemeToggleProps {
 
 export const ThemeToggle = ({ variant = "default" }: ThemeToggleProps) => {
   const { theme, setTheme } = useTheme();
+  const isPwa = useIsPwa();
+
+  // Only show dark mode toggle in PWA mode
+  if (!isPwa) return null;
 
   if (variant === "nav") {
     return (
