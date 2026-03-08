@@ -26,8 +26,7 @@ import { useRatings, sortByRating, RatingData } from "@/hooks/useRatings";
 import { useRealtimeBookings } from "@/hooks/useRealtimeBookings";
 import { useResponsiveLimit } from "@/hooks/useResponsiveLimit";
 
-// Memoized listing card wrapper for performance
-const MemoizedListingCard = memo(ListingCard);
+// ListingCard is already memoized via memo() in its module
 
 const Index = () => {
   const navigate = useNavigate();
