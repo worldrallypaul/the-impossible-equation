@@ -8,7 +8,6 @@ import { NavigationDrawer } from "./NavigationDrawer";
 import { Link, useNavigate } from "react-router-dom";
 import { NotificationBell } from "./NotificationBell";
 import { AccountSheet } from "./AccountSheet";
-import { ThemeToggle } from "./ThemeToggle";
 
 export interface HeaderProps {
   onSearchClick?: () => void;
@@ -87,7 +86,6 @@ export const Header = ({ onSearchClick, showSearchIcon = true, className, __from
           ))}
         </nav>
         <div className="flex items-center gap-1 sm:gap-2">
-          <ThemeToggle />
           <NotificationBell />
           {user ? (
             <AccountSheet>
