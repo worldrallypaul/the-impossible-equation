@@ -106,8 +106,7 @@ const App = () => {
   }, []);
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-    <PwaThemeEnforcer />
+    <>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
