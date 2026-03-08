@@ -256,12 +256,12 @@ export default function Payment() {
           <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Host income after deductions</p>
         </div>
         <div className="grid grid-cols-2 gap-2 mb-4">
-          <StatCard icon={<DollarSign className="h-4 w-4" />} label="Gross Earnings" value={`KES ${stats.hostEarnings.toLocaleString()}`} />
-          <StatCard icon={<Percent className="h-4 w-4" />} label="Service Fee" value={`- KES ${stats.serviceFeeDeducted.toLocaleString()}`} />
+          <StatCard icon={<DollarSign className="h-4 w-4" />} label="Gross Earnings" value={formatPrice(stats.hostEarnings)} />
+          <StatCard icon={<Percent className="h-4 w-4" />} label="Service Fee" value={`- ${formatPrice(stats.serviceFeeDeducted)}`} />
           {stats.referralDeducted > 0 && (
-            <StatCard icon={<Award className="h-4 w-4" />} label="Referral Comm." value={`- KES ${Math.round(stats.referralDeducted).toLocaleString()}`} />
+            <StatCard icon={<Award className="h-4 w-4" />} label="Referral Comm." value={`- ${formatPrice(Math.round(stats.referralDeducted))}`} />
           )}
-          <StatCard icon={<Wallet className="h-4 w-4" />} label="Net Earnings" value={`KES ${Math.max(0, stats.hostEarnings - stats.serviceFeeDeducted).toLocaleString()}`} />
+          <StatCard icon={<Wallet className="h-4 w-4" />} label="Net Earnings" value={formatPrice(Math.max(0, stats.hostEarnings - stats.serviceFeeDeducted))} />
         </div>
 
         {/* Referral Stats */}
