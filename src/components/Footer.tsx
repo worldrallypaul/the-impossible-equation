@@ -59,6 +59,9 @@ const LANGUAGES = [
   { code: "en", name: "English" },
   { code: "fr", name: "Français" },
   { code: "es", name: "Español" },
+  { code: "pt", name: "Português" },
+  { code: "de", name: "Deutsch" },
+  { code: "zh", name: "中文" },
   { code: "ar", name: "العربية" },
   { code: "he", name: "עברית" },
 ];
