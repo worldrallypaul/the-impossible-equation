@@ -122,6 +122,7 @@ const CreateTripEvent = () => {
     if (!formData.available_tickets || parseInt(formData.available_tickets) <= 0) errors.push("available_tickets");
     if (!formData.phone_number) errors.push("phone_number");
     if (!formData.description.trim()) errors.push("description");
+    if (galleryImages.length < 5) errors.push("gallery");
 
     setValidationErrors(errors);
     if (errors.length > 0) {
