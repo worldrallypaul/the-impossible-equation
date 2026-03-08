@@ -567,7 +567,7 @@ z
                       <p className="text-[10px] font-bold text-slate-400 uppercase">per adult</p>
                     </div>
                   ) : (
-                    <h3 className="text-4xl font-black text-emerald-600 mb-2">Free Entry</h3>
+                    <h3 className="text-xl font-bold text-emerald-600 mb-2">Free Entry</h3>
                   )}
                   {!isAccommodationOnly && (
                     <div className="flex items-center justify-center gap-1.5 text-amber-500 font-black mt-2">
