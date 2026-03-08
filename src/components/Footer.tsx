@@ -9,7 +9,7 @@ import {
   Info,
   Facebook,
   Globe,
-  RefreshCw,
+  Globe,
 } from "lucide-react";
 
 // Official Brand Colors
