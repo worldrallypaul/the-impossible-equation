@@ -428,7 +428,7 @@ const Index = () => {
 
           {/* Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pb-28 md:pb-20 px-4">
-            <div className="container max-w-2xl">
+          <div className="container mx-auto px-4 md:px-6">
               <p className="text-primary-foreground/70 text-xs md:text-sm font-semibold uppercase tracking-widest text-center mb-2">
                 {t('hero.tagline')}
               </p>
@@ -444,7 +444,7 @@ const Index = () => {
                 onBack={() => { setIsSearchFocused(false); setSearchQuery(""); fetchAllData(); }}
                 showBackButton={false}
               />
-              {/* Category pills */}
+              {/* Category pills - arranged in rows */}
               <div className="flex justify-center gap-2 md:gap-3 flex-wrap mt-4">
                 {CATEGORIES.map((cat) => (
                   <button
