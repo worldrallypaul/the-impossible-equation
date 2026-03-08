@@ -137,7 +137,7 @@ const AdminVerification = () => {
           </div>
         </div>
 
-        <div className="grid gap-4 max-w-2xl mx-auto">
+        <div className="grid gap-4 mx-auto">
           {/* Pending Requests */}
           <VerificationCard
             label="Pending Approval"

@@ -691,7 +691,7 @@ const CreateAdventure = () => {
         <Button onClick={goBack} className="absolute top-4 left-4 rounded-full bg-black/30 backdrop-blur-md text-white border-none w-10 h-10 p-0 z-50">
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <div className="absolute bottom-8 left-0 w-full px-8 container max-w-4xl mx-auto">
+        <div className="absolute bottom-8 left-0 w-full px-8 container mx-auto">
           <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none text-white drop-shadow-2xl">
             Create <span style={{ color: COLORS.KHAKI }}>Adventure</span>
           </h1>
