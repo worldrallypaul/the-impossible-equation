@@ -314,7 +314,7 @@ const ActivityImageCard = ({ activity, itemId, itemType, accentColor = "#FF7F50"
                 {activity.is_free || activity.price === 0 ? (
                   <span className="text-xs font-bold text-emerald-600">Free</span>
                 ) : (
-                  <span className="text-xs font-bold" style={{ color: accentColor }}>KSh {activity.price.toLocaleString()}/person</span>
+                  <span className="text-xs font-bold" style={{ color: accentColor }}>{formatPrice(activity.price)}/person</span>
                 )}
               </div>
             </div>
