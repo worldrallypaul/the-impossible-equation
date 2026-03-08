@@ -963,8 +963,8 @@ const EditListing = () => {
                 </div>
               ) : (
                 <>
-                  <p className="font-bold text-[#FF0000]">KSh {price}</p>
-                  <p className="text-xs text-slate-500">Child: KSh {priceChild}</p>
+                  <p className="font-bold text-[#FF0000]">{formatPrice(price)}</p>
+                  <p className="text-xs text-slate-500">Child: {formatPrice(priceChild)}</p>
                 </>
               )}
             </div>
