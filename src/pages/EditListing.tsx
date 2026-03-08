@@ -642,7 +642,7 @@ const EditListing = () => {
     <div className="min-h-screen bg-[#F8F9FA] pb-20 md:pb-0">
       <Header />
       
-      <main className="container px-4 py-8 max-w-7xl mx-auto">
+      <main className="container px-4 py-8 mx-auto">
         <Button
           variant="ghost"
           onClick={goBack}

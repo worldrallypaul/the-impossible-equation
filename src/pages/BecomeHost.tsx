@@ -122,7 +122,7 @@ const BecomeHost = () => {
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col">
       <Header />
       
-      <main className="flex-1 container px-4 py-12 max-w-6xl mx-auto mb-24 md:mb-12">
+      <main className="flex-1 container px-4 py-12 mx-auto mb-24 md:mb-12">
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div className="space-y-2">

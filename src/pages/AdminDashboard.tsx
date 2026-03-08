@@ -138,7 +138,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col">
       <Header className="hidden md:block" />
 
-      <main className="flex-1 container px-4 py-8 max-w-2xl mx-auto pb-24 md:pb-8">
+      <main className="flex-1 container px-4 py-8 mx-auto pb-24 md:pb-8">
         <Button
           variant="ghost"
           onClick={() => navigate(-1)}

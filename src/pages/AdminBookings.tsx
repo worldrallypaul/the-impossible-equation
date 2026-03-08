@@ -48,7 +48,7 @@ const AdminBookings = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="container px-3 py-4 max-w-4xl mx-auto">
+      <main className="container px-3 py-4 mx-auto">
         <Button variant="ghost" size="sm" onClick={() => navigate(`/admin/review/${type}/${id}`)} className="mb-3 rounded-lg text-[9px] font-bold uppercase tracking-widest px-3 h-7">
           <ArrowLeft className="mr-1 h-3 w-3" /> Review
         </Button>

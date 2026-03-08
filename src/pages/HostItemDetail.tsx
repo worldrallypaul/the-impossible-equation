@@ -167,7 +167,7 @@ const HostItemDetail = () => {
         </div>
       </div>
 
-      <main className="container px-4 max-w-6xl mx-auto -mt-10 relative z-50">
+      <main className="container px-4 mx-auto -mt-10 relative z-50">
         <div className="grid lg:grid-cols-[1.7fr,1fr] gap-6">
           
           {/* Main Column */}

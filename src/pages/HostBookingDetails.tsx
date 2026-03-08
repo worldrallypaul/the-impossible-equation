@@ -394,7 +394,7 @@ const HostBookingDetails = () => {
     <div className="min-h-screen bg-[#F8F9FA] pb-24">
       <Header />
       
-      <main className="container px-4 max-w-4xl mx-auto py-8">
+      <main className="container px-4 mx-auto py-8">
         <Button 
           variant="ghost" 
           onClick={() => navigate("/host-bookings")} 

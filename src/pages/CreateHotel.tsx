@@ -738,7 +738,7 @@ const CreateHotel = () => {
         </div>
       </div>
 
-      <main className="container px-4 max-w-4xl mx-auto -mt-6 relative z-50 space-y-6">
+      <main className="container px-4 mx-auto -mt-6 relative z-50 space-y-6">
 
         {/* Registration Details */}
         <Card className="bg-white rounded-[28px] p-8 shadow-sm border-none"

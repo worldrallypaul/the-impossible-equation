@@ -303,7 +303,7 @@ export default function AdminPaymentVerification() {
       </div>
 
       <main className="container mx-auto px-4 -mt-10 relative z-10">
-        <div className="max-w-4xl mx-auto">
+        <div className="mx-auto container px-4">
           <Tabs defaultValue="pending" className="w-full">
             <TabsList className="grid w-full grid-cols-3 p-1 bg-white/20 backdrop-blur-md rounded-[20px] mb-8 border border-white/30 h-14">
               <TabsTrigger value="pending" className="rounded-[16px] font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-white data-[state=active]:text-[#008080]">

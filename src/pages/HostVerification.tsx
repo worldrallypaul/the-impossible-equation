@@ -286,7 +286,7 @@ const HostVerification = () => {
     <div className="min-h-screen flex flex-col bg-background pb-0">
       <Header />
       <main className="flex-1 container px-4 py-8">
-        <div className="max-w-3xl mx-auto">
+        <div className="mx-auto">
           <h1 className="text-3xl font-bold mb-2 text-center">Verify Your Identity to Become a Host</h1>
           <p className="text-muted-foreground mb-8 text-center">
             Complete the following steps to verify your identity and gain access to hosting features.

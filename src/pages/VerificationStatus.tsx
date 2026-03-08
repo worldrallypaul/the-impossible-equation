@@ -66,7 +66,7 @@ const VerificationStatus = () => {
         </div>
       </div>
 
-      <main className="container px-4 max-w-2xl mx-auto -mt-16 relative z-50">
+      <main className="container px-4 mx-auto -mt-16 relative z-50">
         <Card className="bg-white rounded-[40px] p-8 md:p-12 shadow-2xl border-none">
           
           {!verification ? (

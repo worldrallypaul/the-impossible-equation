@@ -111,7 +111,7 @@ const AdminVerification = () => {
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col pb-24">
       <Header className="hidden md:block" />
 
-      <main className="flex-1 container mx-auto px-4 pt-8 md:pt-12 max-w-4xl">
+      <main className="flex-1 container mx-auto px-4 pt-8 md:pt-12">
         <div className="mb-8">
           <Button
             variant="ghost"
