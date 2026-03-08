@@ -223,7 +223,7 @@ const AllBookings = () => {
                       {itemDetails[booking.item_id]?.name || "Loading..."}
                     </p>
                     <p className="text-md font-black text-[#008080]">
-                      KES {booking.total_amount.toLocaleString()}
+                      {formatPrice(booking.total_amount)}
                     </p>
                   </div>
                 </Card>
