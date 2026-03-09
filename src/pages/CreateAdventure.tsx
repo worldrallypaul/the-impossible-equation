@@ -39,28 +39,31 @@ const COLORS = {
 let _idCounter = 0;
 const makeId = () => `item-${Date.now()}-${++_idCounter}`;
 
-const generateUUID = (): string => {
-  if (typeof crypto !== "undefined" && crypto.randomUUID) {
-    return crypto.randomUUID();
-  }
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-};
-
+/**
+ * Generates a URL-safe, human-readable slug used as BOTH the DB primary key
+ * and the public URL segment.
+ *
+ * Format:  <cleaned-name>-<5-char-random>
+ * Example: serengeti-plains-A3K9Z
+ * Max len: 32 (name) + 1 (-) + 5 (code) = 38 chars — safe for any PK / varchar column.
+ */
 const generateFriendlySlug = (name: string): string => {
   const cleanName = name
-    .toLowerCase().trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .substring(0, 30);
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")   // only letters, digits, spaces, hyphens
+    .replace(/\s+/g, "-")            // spaces → hyphens
+    .replace(/-+/g, "-")             // collapse multiple hyphens
+    .substring(0, 32)
+    .replace(/-$/, "");              // no trailing hyphen
+
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let code = "";
-  for (let i = 0; i < 4; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
-  return `${cleanName}-${code}`;
+  for (let i = 0; i < 5; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  return `${cleanName}-${code}`;    // e.g. "serengeti-plains-A3K9Z"
 };
 
 const safeObjectUrl = (file: File): string => {
@@ -515,7 +518,6 @@ const CreateAdventure = () => {
   const [formData, setFormData] = useState({
     registrationName: "", registrationNumber: "", locationName: "", place: "",
     country: "", description: "", email: "", phoneNumber: "",
-    // ✅ "00:00" / "23:59" → OperatingHoursSection reads these and starts the 24h toggle ON
     openingHours: "00:00",
     closingHours: "23:59",
     entranceFeeType: "free", adultPrice: "0", childPrice: "0",
@@ -599,7 +601,13 @@ const CreateAdventure = () => {
     if (!formData.registrationName.trim() || !formData.registrationNumber.trim() ||
         !formData.country || !formData.locationName.trim() || !formData.place.trim() ||
         !formData.latitude || !formData.description.trim() || galleryImages.length < 5) {
-      toast({ title: "Action Required", description: galleryImages.length < 5 ? "Please upload at least 5 gallery photos." : "Please fill in all mandatory fields.", variant: "destructive" });
+      toast({
+        title: "Action Required",
+        description: galleryImages.length < 5
+          ? "Please upload at least 5 gallery photos."
+          : "Please fill in all mandatory fields.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -618,7 +626,9 @@ const CreateAdventure = () => {
 
     setLoading(true);
     try {
-      const dbId = generateUUID();
+      // ✅ Slug is used as BOTH the primary key (id) and the URL slug.
+      // Format: <name-kebab-case>-<5-char-random>
+      // Example: "serengeti-plains-A3K9Z"  (max ~38 chars, DB-safe)
       const friendlySlug = generateFriendlySlug(formData.registrationName);
 
       const galleryUrls = await Promise.all(galleryImages.map((f) => uploadFile(f, "gallery")));
@@ -645,8 +655,8 @@ const CreateAdventure = () => {
       const selectedDays = Object.entries(workingDays).filter(([, v]) => v).map(([k]) => k);
 
       const { error } = await supabase.from("adventure_places").insert([{
-        id: dbId,
-        slug: friendlySlug,
+        id: friendlySlug,           // ← slug used as primary key
+        slug: friendlySlug,         // ← also stored in slug column for clarity
         name: formData.registrationName,
         registration_number: formData.registrationNumber,
         location: formData.locationName,
@@ -655,7 +665,9 @@ const CreateAdventure = () => {
         description: formData.description,
         email: formData.email,
         phone_numbers: formData.phoneNumber ? [formData.phoneNumber] : [],
-        map_link: formData.latitude ? `https://www.google.com/maps?q=${formData.latitude},${formData.longitude}` : "",
+        map_link: formData.latitude
+          ? `https://www.google.com/maps?q=${formData.latitude},${formData.longitude}`
+          : "",
         latitude: formData.latitude,
         longitude: formData.longitude,
         opening_hours: formData.openingHours,
@@ -915,7 +927,7 @@ const CreateAdventure = () => {
                 return;
               }
               setShowReview(true);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
               className="w-full py-6 rounded-2xl font-black uppercase tracking-widest text-sm text-white"
               style={{ background: `linear-gradient(135deg, ${COLORS.TEAL} 0%, #006666 100%)` }}>

@@ -84,8 +84,8 @@ const ListingCardComponent = ({
   const optimizedImageUrl = useMemo(() => optimizeSupabaseImage(imageUrl, { width: 600, height: 450, quality: 85 }), [imageUrl]);
 
   const displayType = useMemo(() => {
-    if (isEventOrSport) return "Event & Sports";
-    if (type === "ADVENTURE PLACE") return "Attraction";
+    if (isEventOrSport) return "Event";
+    if (type === "ADVENTURE PLACE") return "Adventure place";
     if (type === "HOTEL") return "Hotel";
     if (type === "TRIP") return "Trip";
     return type.replace('_', ' ');
