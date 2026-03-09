@@ -567,7 +567,7 @@ const Index = () => {
             {/* Adventures */}
             <ScrollSection
               title={t('sections.placesToAdventure')} viewAllPath="/category/campsite"
-              accentClass="text-primary" scrollRef={featuredCampsitesRef}
+              accentColor="hsl(142, 70%, 35%)" scrollRef={featuredCampsitesRef}
               onScroll={handleScroll('featuredCampsites')}
               hasItems={displayCampsites.length > 0} loading={loadingScrollable}
             >
@@ -577,7 +577,7 @@ const Index = () => {
             {/* Hotels */}
             <ScrollSection
               title={t('sections.hotelsAccommodations')} viewAllPath="/category/hotels"
-              accentClass="text-[hsl(180,100%,25%)]" scrollRef={featuredHotelsRef}
+              accentColor="hsl(220, 70%, 50%)" scrollRef={featuredHotelsRef}
               onScroll={handleScroll('featuredHotels')}
               hasItems={displayHotels.length > 0} loading={loadingScrollable}
             >
@@ -587,7 +587,7 @@ const Index = () => {
             {/* Trips */}
             <ScrollSection
               title={t('sections.tripsAndTours')} viewAllPath="/category/trips"
-              accentClass="text-destructive" scrollRef={featuredTripsRef}
+              accentColor="hsl(25, 90%, 50%)" scrollRef={featuredTripsRef}
               onScroll={handleScroll('featuredTrips')}
               hasItems={displayTrips.length > 0} loading={loadingScrollable}
             >
@@ -597,7 +597,7 @@ const Index = () => {
             {/* Events */}
             <ScrollSection
               title={t('sections.sportsAndEvents')} viewAllPath="/category/events"
-              accentClass="text-[hsl(16,100%,66%)]" scrollRef={featuredEventsRef}
+              accentColor="hsl(340, 75%, 50%)" scrollRef={featuredEventsRef}
               onScroll={handleScroll('featuredEvents')}
               hasItems={displayEvents.length > 0} loading={loadingScrollable}
             >
