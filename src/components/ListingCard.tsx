@@ -122,6 +122,19 @@ const ListingCardComponent = ({
     return null;
   }, [isSoldOut, isOutdated, fewSlotsRemaining, remainingTickets]);
 
+  // Reusable category badge element
+  const categoryBadge = (
+    <span
+      className={cn(
+        "text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-sm",
+        !categoryColor && "text-primary-foreground bg-primary"
+      )}
+      style={categoryColor ? { color: '#fff', backgroundColor: categoryColor } : undefined}
+    >
+      {displayType}
+    </span>
+  );
+
   return (
     <Card
       onClick={handleCardClick}
@@ -136,7 +149,6 @@ const ListingCardComponent = ({
       {/* Image */}
       <div
         ref={imageContainerRef}
-        // ── FIX: added md:min-h-[180px] so image never collapses in grid cells ──
         className="relative w-[100px] sm:w-[120px] md:w-full flex-shrink-0 overflow-hidden min-h-[120px] md:min-h-[180px] md:aspect-[16/9]"
       >
         {!imageLoaded && !imageError && (
@@ -155,6 +167,11 @@ const ListingCardComponent = ({
             )}
           />
         )}
+
+        {/* ── Category badge: over image top-left, only on md+ (col layout) ── */}
+        <div className="absolute left-2 top-2 z-20 hidden md:flex">
+          {categoryBadge}
+        </div>
 
         {/* Heart */}
         {onSave && (
@@ -181,17 +198,12 @@ const ListingCardComponent = ({
 
       {/* Content */}
       <div className="flex flex-1 flex-col justify-between p-3 sm:p-4 min-w-0 gap-1.5">
-        {/* Top: Category + Urgency */}
+        {/* Top row: category badge (mobile row layout only) + urgency */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span
-            className={cn(
-              "text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md",
-              !categoryColor && "text-primary-foreground bg-primary"
-            )}
-            style={categoryColor ? { color: '#fff', backgroundColor: categoryColor } : undefined}
-          >
-            {displayType}
-          </span>
+          {/* ── Category badge: inside content only on mobile (row layout) ── */}
+          <div className="md:hidden">
+            {categoryBadge}
+          </div>
           {urgencyBadge && (
             <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full border", urgencyBadge.color)}>
               {urgencyBadge.text}
@@ -199,8 +211,7 @@ const ListingCardComponent = ({
           )}
         </div>
 
-        {/* Title — 1 line on md+ to keep grid cards uniform */}
-        {/* ── FIX: md:line-clamp-1 keeps grid row heights consistent ── */}
+        {/* Title */}
         <h3 className="line-clamp-2 md:line-clamp-1 text-sm sm:text-[15px] font-bold leading-snug text-foreground group-hover:text-primary transition-colors">
           {formattedName}
         </h3>
