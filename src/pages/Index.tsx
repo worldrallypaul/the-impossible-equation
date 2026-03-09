@@ -631,6 +631,7 @@ const Index = () => {
                           isSaved={savedItems.has(item.id)} hidePrice={true} showBadge={true}
                           priority={index === 0} activities={a.activities} distance={dist}
                           avgRating={rd?.avgRating} reviewCount={rd?.reviewCount} place={a.place}
+                          description={a.description}
                         />
                       </div>
                     );
