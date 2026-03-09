@@ -17,25 +17,6 @@ export interface HeaderProps {
   __fromLayout?: boolean;
 }
 
-const LogoWithFallback = () => {
-  const [loaded, setLoaded] = useState(false);
-  return (
-    <div className="h-8 w-8 rounded-full shadow-sm border border-border bg-muted flex items-center justify-center overflow-hidden relative">
-      {!loaded && (
-        <span className="font-bold text-lg italic leading-none" style={{ background: "linear-gradient(to right, #1a365d, #2b6cb0, #4fd1c5)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>R</span>
-      )}
-      <img 
-        src="/fulllogo.png" 
-        alt="Logo" 
-        loading="eager" 
-        fetchPriority="high" 
-        className={`h-full w-full object-contain p-1 absolute inset-0 ${loaded ? 'opacity-100' : 'opacity-0'}`}
-        onLoad={() => setLoaded(true)}
-      />
-    </div>
-  );
-};
-
 export const Header = ({ onSearchClick, showSearchIcon = true, className, __fromLayout }: HeaderProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -64,7 +45,7 @@ export const Header = ({ onSearchClick, showSearchIcon = true, className, __from
           <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
             <SheetTrigger asChild>
               <button className={headerIconStyles} aria-label="Open Menu">
-                <Menu className="h-5 w-5" />
+                <Menu className="h-7 w-7 stroke-[2.5]" />
               </button>
             </SheetTrigger>
             <SheetContent side="left" className="w-72 p-0 h-screen border-none">
@@ -72,11 +53,8 @@ export const Header = ({ onSearchClick, showSearchIcon = true, className, __from
             </SheetContent>
           </Sheet>
           <Link to="/" className="flex items-center gap-2 group ml-1">
-            <LogoWithFallback />
-            <span className="font-bold text-lg tracking-tight italic leading-none text-white md:text-transparent md:bg-clip-text" style={{ WebkitBackgroundClip: "text", WebkitTextFillColor: undefined, background: undefined } as any}>
-              <span className="md:hidden text-white font-bold text-lg tracking-tight italic">RealTravo</span>
-              <span className="hidden md:inline font-bold text-lg tracking-tight italic" style={{ background: "linear-gradient(to right, #1a365d, #2b6cb0, #4fd1c5)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>RealTravo</span>
-            </span>
+            <span className="md:hidden text-white font-bold text-lg tracking-tight italic">RealTravo</span>
+            <span className="hidden md:inline font-bold text-lg tracking-tight italic" style={{ background: "linear-gradient(to right, #1a365d, #2b6cb0, #4fd1c5)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>RealTravo</span>
           </Link>
         </div>
         <nav className="hidden lg:flex items-center gap-8">

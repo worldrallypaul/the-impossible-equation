@@ -66,8 +66,9 @@ export const NotificationBell = () => {
 
   const headerIconStyles = `
     h-11 w-11 rounded-2xl flex items-center justify-center transition-all duration-200 
-    active:scale-90 shadow-sm border border-slate-200 relative group overflow-visible
-    ${isIndexPage ? 'text-slate-800 bg-white/90 hover:bg-white' : 'text-slate-700 bg-slate-50 hover:bg-slate-100'}
+    active:scale-90 relative group overflow-visible
+    bg-transparent text-white md:shadow-sm md:border md:border-slate-200
+    ${isIndexPage ? 'md:text-slate-800 md:bg-white/90 md:hover:bg-white' : 'md:text-slate-700 md:bg-slate-50 md:hover:bg-slate-100'}
   `;
 
   const getNotificationDeepLink = useCallback((notification: Notification): string | null => {
