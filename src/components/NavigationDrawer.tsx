@@ -49,7 +49,7 @@ export const NavigationDrawer = ({ onClose }: NavigationDrawerProps) => {
           <div className="p-2 rounded-lg bg-slate-100 group-hover:bg-[#008080] transition-colors">
             <Icon className="h-4 w-4 text-slate-600 group-hover:text-white" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white">
+          <span className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 group-hover:text-slate-900">
             {label}
           </span>
         </div>
