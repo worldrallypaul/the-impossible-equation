@@ -283,6 +283,7 @@ const Saved = () => {
                 </Button>
               </div>
             )}
+        </main>
       </div>
 
       {!isEmbeddedInSheet && (
