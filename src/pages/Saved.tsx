@@ -264,7 +264,25 @@ const Saved = () => {
               })}
             </div>
           )}
-        </main>
+            {hasMore && savedListings.length > 0 && (
+              <div className="flex justify-center mt-6">
+                <Button
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                  variant="outline"
+                  className="rounded-2xl font-bold text-xs h-10 px-6"
+                >
+                  {loadingMore ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Loading...
+                    </>
+                  ) : (
+                    "Load More"
+                  )}
+                </Button>
+              </div>
+            )}
       </div>
 
       {!isEmbeddedInSheet && (
