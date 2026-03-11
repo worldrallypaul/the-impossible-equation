@@ -12,8 +12,8 @@ interface MapViewProps {
 
 export const MapView = ({ listings, onMarkerClick }: MapViewProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const markers = useRef<mapboxgl.Marker[]>([]);
+  const map = useRef<any>(null);
+  const markers = useRef<any[]>([]);
   const [selectedListing, setSelectedListing] = useState<any | null>(null);
   const navigate = useNavigate();
 
