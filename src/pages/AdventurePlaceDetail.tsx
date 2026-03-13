@@ -349,7 +349,7 @@ const AdventurePlaceDetail = () => {
               )}
             </section>
 
-            <div className="md:hidden"><OperatingHoursInfo /></div>
+            {/* Operating hours moved into mobile booking card below */}
 
             <GeneralFacilitiesDisplay facilityIds={
               Array.isArray(place.amenities)
