@@ -167,6 +167,50 @@ export const NavigationDrawer = ({ onClose }: NavigationDrawerProps) => {
           <NavItem icon={Shield} label={t('drawer.privacy')} path="/privacy-policy" />
           
         </ul>
+
+        {/* Currency & Language - shown in Capacitor (no footer) */}
+        {isNative && (
+          <div className="mt-4 space-y-4 px-4">
+            <div className="h-px bg-slate-100" />
+            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('footer.currency', 'Currency')}</p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCurrency("KES")}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+                  currency === "KES"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground"
+                }`}
+              >
+                KSh (KES)
+              </button>
+              <button
+                onClick={() => setCurrency("USD")}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+                  currency === "USD"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground"
+                }`}
+              >
+                $ (USD)
+              </button>
+            </div>
+            <p className="text-[9px] text-muted-foreground">
+              {rateLoading ? "Fetching rate..." : `1 USD = ${rate.toFixed(2)} KES`}
+            </p>
+
+            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('footer.language', 'Language')}</p>
+            <select
+              value={language}
+              onChange={(e) => handleLanguageChange(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg bg-muted text-foreground text-xs font-bold focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+            >
+              {LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code}>{l.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
       </nav>
       
       {/* Footer & Transparency Note */}
