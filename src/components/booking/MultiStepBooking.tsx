@@ -508,6 +508,7 @@ import { useSearchParams } from "react-router-dom";
                       </Button>
                     </div>
                   )}
+                  </div>
                 </div>
               </div>
             );
