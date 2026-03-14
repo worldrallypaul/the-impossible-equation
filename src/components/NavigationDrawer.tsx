@@ -18,11 +18,25 @@ const Separator = () => (
   <hr className="my-1 border-slate-100 dark:border-gray-800/50" />
 );
 
+const LANGUAGES = [
+  { code: "en", name: "English" },
+  { code: "fr", name: "Français" },
+  { code: "es", name: "Español" },
+  { code: "pt", name: "Português" },
+  { code: "de", name: "Deutsch" },
+  { code: "zh", name: "中文" },
+  { code: "ar", name: "العربية" },
+  { code: "he", name: "עברית" },
+];
+
 export const NavigationDrawer = ({ onClose }: NavigationDrawerProps) => {
   const { user, signOut } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { currency, setCurrency, rate, loading: rateLoading } = useCurrency();
   const [userName, setUserName] = useState("");
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
+  const [language, setLanguage] = useState(i18n.language || "en");
+  const isNative = Capacitor.isNativePlatform();
 
   useEffect(() => {
     const fetchUserData = async () => {
