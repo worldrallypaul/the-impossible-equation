@@ -367,7 +367,7 @@ const AdventurePlaceDetail = () => {
                       )}
                     </div>
                   ) : (
-                    <span className="text-3xl font-black text-emerald-600">Free Entry</span>
+                    <span className="text-sm font-normal text-emerald-600">Free Entry</span>
                   )}
                 </div>
                 <div className="text-right">
