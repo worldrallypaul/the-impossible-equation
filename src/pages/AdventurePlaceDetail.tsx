@@ -341,7 +341,16 @@ const AdventurePlaceDetail = () => {
 
             {/* Operating hours moved into mobile booking card below */}
 
-            {/* Mobile booking card - above amenities/activities */}
+            {/* General amenities - above booking card on mobile */}
+            <div className="lg:hidden">
+              <GeneralFacilitiesDisplay facilityIds={
+                Array.isArray(place.amenities)
+                  ? place.amenities.map((a: any) => typeof a === "string" ? a : a.name || "")
+                  : []
+              } />
+            </div>
+
+            {/* Mobile booking card - above activities */}
             <div className="bg-white rounded-[32px] p-6 shadow-xl border border-slate-100 lg:hidden">
               <div className="flex justify-between items-start mb-6">
                 <div>
@@ -409,11 +418,14 @@ const AdventurePlaceDetail = () => {
               </div>
             </div>
 
-            <GeneralFacilitiesDisplay facilityIds={
-              Array.isArray(place.amenities)
-                ? place.amenities.map((a: any) => typeof a === "string" ? a : a.name || "")
-                : []
-            } />
+            {/* Desktop only general facilities (mobile shown above booking card) */}
+            <div className="hidden lg:block">
+              <GeneralFacilitiesDisplay facilityIds={
+                Array.isArray(place.amenities)
+                  ? place.amenities.map((a: any) => typeof a === "string" ? a : a.name || "")
+                  : []
+              } />
+            </div>
 
             {place.facilities?.length > 0 && (
               <div id="facilities-section">
