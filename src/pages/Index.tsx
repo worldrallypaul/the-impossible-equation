@@ -1,4 +1,8 @@
 import { useState, useEffect, useRef, useMemo, useCallback, memo, lazy, Suspense } from "react";
+import { Menu } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { NavigationDrawer } from "@/components/NavigationDrawer";
+import { NotificationBell } from "@/components/NotificationBell";
 import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import { useNavigate, Link } from "react-router-dom";
@@ -131,6 +135,8 @@ const Index = () => {
 
   const [isSearchVisible, setIsSearchVisible] = useState(true);
   const [showSearchIcon, setShowSearchIcon] = useState(false);
+  const [scrolledPastHero, setScrolledPastHero] = useState(false);
+  const [isIndexDrawerOpen, setIsIndexDrawerOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const [scrollableRows, setScrollableRows] = useState<{
     trips: any[]; hotels: any[]; attractions: any[];
@@ -345,8 +351,8 @@ const Index = () => {
 
   useEffect(() => {
     const ctrl = () => {
-      if (window.scrollY > 200) { setIsSearchVisible(false); setShowSearchIcon(true); }
-      else { setIsSearchVisible(true); setShowSearchIcon(false); }
+      if (window.scrollY > 200) { setIsSearchVisible(false); setShowSearchIcon(true); setScrolledPastHero(true); }
+      else { setIsSearchVisible(true); setShowSearchIcon(false); setScrolledPastHero(false); }
     };
     window.addEventListener("scroll", ctrl);
     return () => window.removeEventListener("scroll", ctrl);
@@ -432,6 +438,27 @@ const Index = () => {
           "potentialAction": { "@type": "SearchAction", "target": "https://realtravo.com/?q={search_term_string}", "query-input": "required name=search_term_string" }
         }}
       />
+
+      {/* ─── Fixed mobile top bar on scroll ─────────────────────────────── */}
+      {scrolledPastHero && !isSearchFocused && (
+        <div className="fixed top-0 left-0 right-0 z-[100] md:hidden flex items-center justify-between px-4 py-2 transition-all duration-200"
+          style={{ backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}
+        >
+          <Sheet open={isIndexDrawerOpen} onOpenChange={setIsIndexDrawerOpen}>
+            <SheetTrigger asChild>
+              <button className="h-10 w-10 rounded-xl flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-90" aria-label="Open Menu">
+                <Menu className="h-7 w-7 stroke-[2.5]" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-full sm:w-72 p-0 h-screen border-none">
+              <NavigationDrawer onClose={() => setIsIndexDrawerOpen(false)} />
+            </SheetContent>
+          </Sheet>
+          <div className="[&_button]:text-white [&_button]:h-10 [&_button]:w-10">
+            <NotificationBell />
+          </div>
+        </div>
+      )}
 
       {/* ─── Hero ──────────────────────────────────────────────────────────── */}
       {!isSearchFocused && (
