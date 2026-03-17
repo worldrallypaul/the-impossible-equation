@@ -7,7 +7,7 @@ const DATA_CACHE = 'realtravo-data-v12';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
-  '/manifest.json',
+  '/manifest.json', 
   '/fulllogo.png',
   '/favicon.ico',
 
