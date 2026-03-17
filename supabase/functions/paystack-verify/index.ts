@@ -171,10 +171,31 @@ serve(async (req) => {
           .select()
           .single();
 
+        let resolvedBooking = booking ?? null;
+
         if (bookingError) {
           console.error("Error creating booking:", bookingError);
-        } else {
-          console.log("Booking created successfully:", booking?.id);
+        }
+
+        if (!resolvedBooking) {
+          const { data: existingBookings, error: existingBookingError } = await supabase
+            .from("bookings")
+            .select("*")
+            .eq("item_id", bookingData.item_id)
+            .eq("guest_email", bookingData.guest_email)
+            .eq("visit_date", bookingData.visit_date)
+            .order("created_at", { ascending: false })
+            .limit(1);
+
+          if (existingBookingError) {
+            console.error("Error resolving existing booking:", existingBookingError);
+          }
+
+          resolvedBooking = existingBookings?.[0] ?? null;
+        }
+
+        if (resolvedBooking) {
+          console.log("Booking resolved successfully:", resolvedBooking.id);
           console.log("Payment distribution:", {
             totalAmount,
             serviceFeeAmount,
