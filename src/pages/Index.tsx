@@ -347,12 +347,20 @@ const Index = () => {
 
   useEffect(() => { if (position) fetchNearbyPlacesAndHotels(); }, [position, fetchNearbyPlacesAndHotels]);
 
+  // ─── Top bar appears immediately on ANY scroll, icons black before scroll ──
   useEffect(() => {
     const ctrl = () => {
-      if (window.scrollY > 200) { setIsSearchVisible(false); setShowSearchIcon(true); setScrolledPastHero(true); }
-      else { setIsSearchVisible(true); setShowSearchIcon(false); setScrolledPastHero(false); }
+      if (window.scrollY > 0) {
+        setIsSearchVisible(false);
+        setShowSearchIcon(true);
+        setScrolledPastHero(true);
+      } else {
+        setIsSearchVisible(true);
+        setShowSearchIcon(false);
+        setScrolledPastHero(false);
+      }
     };
-    window.addEventListener("scroll", ctrl);
+    window.addEventListener("scroll", ctrl, { passive: true });
     return () => window.removeEventListener("scroll", ctrl);
   }, []);
 
@@ -437,16 +445,20 @@ const Index = () => {
         }}
       />
 
-      {/* ─── Fixed full-width mobile top bar on scroll ────────────────────── */}
-      {scrolledPastHero && !isSearchFocused && (
+      {/* ─── Fixed top bar: always visible on mobile, icons black at top / white after scroll ── */}
+      {!isSearchFocused && (
         <div
-          className="fixed top-0 left-0 right-0 z-[100] md:hidden flex items-center justify-between px-4 py-2.5"
+          className="fixed top-0 left-0 right-0 z-[100] md:hidden flex items-center justify-between px-4"
           style={{
             paddingTop: 'calc(env(safe-area-inset-top, 0px) + 10px)',
-            backgroundColor: 'rgba(0,0,0,0.75)',
-            backdropFilter: 'blur(14px)',
-            WebkitBackdropFilter: 'blur(14px)',
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
+            paddingBottom: '10px',
+            backgroundColor: scrolledPastHero
+              ? 'rgba(0,0,0,0.75)'
+              : 'transparent',
+            backdropFilter: scrolledPastHero ? 'blur(14px)' : 'none',
+            WebkitBackdropFilter: scrolledPastHero ? 'blur(14px)' : 'none',
+            borderBottom: scrolledPastHero ? '1px solid rgba(255,255,255,0.08)' : 'none',
+            transition: 'background-color 0.2s ease, backdrop-filter 0.2s ease',
           }}
         >
           {/* Left: Menu + Brand name */}
@@ -454,8 +466,9 @@ const Index = () => {
             <Sheet open={isIndexDrawerOpen} onOpenChange={setIsIndexDrawerOpen}>
               <SheetTrigger asChild>
                 <button
-                  className="h-9 w-9 rounded-xl flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-95"
+                  className="h-9 w-9 rounded-xl flex items-center justify-center hover:bg-black/10 transition-all active:scale-95"
                   aria-label="Open Menu"
+                  style={{ color: scrolledPastHero ? '#ffffff' : '#000000' }}
                 >
                   <Menu className="h-5 w-5 stroke-[2.5]" />
                 </button>
@@ -464,13 +477,19 @@ const Index = () => {
                 <NavigationDrawer onClose={() => setIsIndexDrawerOpen(false)} />
               </SheetContent>
             </Sheet>
-            <span className="font-bold text-lg tracking-tight italic text-white">
+            <span
+              className="font-bold text-lg tracking-tight italic"
+              style={{ color: scrolledPastHero ? '#ffffff' : '#000000' }}
+            >
               RealTravo
             </span>
           </div>
 
-          {/* Right: Notification bell */}
-          <div className="[&_button]:text-white [&_button]:h-9 [&_button]:w-9">
+          {/* Right: Notification bell — black before scroll, white after */}
+          <div
+            className="[&_button]:h-9 [&_button]:w-9"
+            style={{ color: scrolledPastHero ? '#ffffff' : '#000000' }}
+          >
             <NotificationBell />
           </div>
         </div>
