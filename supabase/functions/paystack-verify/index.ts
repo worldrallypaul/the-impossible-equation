@@ -205,7 +205,6 @@ serve(async (req) => {
 
           // Create payout record for host (to be processed 48h before booking)
           if (hostId && hostPayoutAmount > 0) {
-            // Get host bank details
             const { data: bankDetails } = await supabase
               .from('bank_details')
               .select('*')
@@ -214,15 +213,14 @@ serve(async (req) => {
               .single();
 
             if (bankDetails) {
-              // Schedule host payout
               await supabase.from('payouts').insert({
                 recipient_id: hostId,
                 recipient_type: 'host',
-                booking_id: booking?.id,
+                booking_id: resolvedBooking?.id,
                 amount: hostPayoutAmount,
                 status: 'scheduled',
                 scheduled_for: payoutScheduledAt,
-                bank_code: bankDetails.bank_name, // Will need bank code mapping
+                bank_code: bankDetails.bank_name,
                 account_number: bankDetails.account_number,
                 account_name: bankDetails.account_holder_name,
               });
@@ -232,18 +230,15 @@ serve(async (req) => {
             }
           }
 
-          // Process referral commission if applicable (done via database trigger)
-          // The award_referral_commission trigger handles this automatically
-
           // Send confirmation email to the user
           try {
             await supabase.functions.invoke("send-booking-confirmation", {
               body: {
-                bookingId: booking?.id,
+                bookingId: resolvedBooking?.id,
                 email: bookingData.guest_email,
                 guestName: bookingData.guest_name,
                 bookingType: bookingData.booking_type,
-                itemName: bookingData.emailData?.itemName || "Booking",
+                itemName: bookingData.emailData?.itemName || bookingData.booking_details?.item_name || "Booking",
                 totalAmount: bookingData.total_amount,
                 bookingDetails: bookingData.booking_details,
                 visitDate: bookingData.visit_date,
