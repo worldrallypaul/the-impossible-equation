@@ -12,10 +12,17 @@ const config: CapacitorConfig = {
     Browser: {},
     GoogleAuth: {
       scopes: ['profile', 'email'],
-      // Replace with your actual Web Client ID from Google Cloud Console
       serverClientId: '',
       forceCodeForRefreshToken: true,
+    },
+    StatusBar: {
+      overlaysWebView: true,
+      style: 'LIGHT',
+      backgroundColor: '#00000000'
     }
+  },
+  android: {
+    backgroundColor: '#f4f7f6'
   }
 };
 
