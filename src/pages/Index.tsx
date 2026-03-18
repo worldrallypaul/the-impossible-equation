@@ -1,8 +1,4 @@
 import { useState, useEffect, useRef, useMemo, useCallback, memo, lazy, Suspense } from "react";
-import { Menu } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { NavigationDrawer } from "@/components/NavigationDrawer";
-import { NotificationBell } from "@/components/NotificationBell";
 import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";
 import { useNavigate, Link } from "react-router-dom";
@@ -134,9 +130,6 @@ const Index = () => {
   const { cardLimit, isLargeScreen } = useResponsiveLimit();
 
   const [isSearchVisible, setIsSearchVisible] = useState(true);
-  const [showSearchIcon, setShowSearchIcon] = useState(false);
-  const [scrolledPastHero, setScrolledPastHero] = useState(false);
-  const [isIndexDrawerOpen, setIsIndexDrawerOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const [scrollableRows, setScrollableRows] = useState<{
     trips: any[]; hotels: any[]; attractions: any[];
@@ -347,24 +340,14 @@ const Index = () => {
 
   useEffect(() => { if (position) fetchNearbyPlacesAndHotels(); }, [position, fetchNearbyPlacesAndHotels]);
 
-  // ─── Top bar appears immediately on ANY scroll, icons black before scroll ──
+  // ─── Keep search hero expanded only at the top ───────────────────────────
   useEffect(() => {
     const ctrl = () => {
-      if (window.scrollY > 0) {
-        setIsSearchVisible(false);
-        setShowSearchIcon(true);
-        setScrolledPastHero(true);
-      } else {
-        setIsSearchVisible(true);
-        setShowSearchIcon(false);
-        setScrolledPastHero(false);
-      }
+      setIsSearchVisible(window.scrollY === 0);
     };
     window.addEventListener("scroll", ctrl, { passive: true });
     return () => window.removeEventListener("scroll", ctrl);
   }, []);
-
-  const handleSearchIconClick = () => { setIsSearchVisible(true); setShowSearchIcon(false); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
   const handleMyLocationTap = useCallback(() => {
     if (permissionDenied) { setShowLocationDialog(true); return; }
@@ -444,50 +427,6 @@ const Index = () => {
           "potentialAction": { "@type": "SearchAction", "target": "https://realtravo.com/?q={search_term_string}", "query-input": "required name=search_term_string" }
         }}
       />
-
-      {/* ─── Fixed top bar: icons always visible, pill bg appears behind them on scroll ── */}
-      {!isSearchFocused && (
-        <div
-          className="fixed top-0 left-0 right-0 z-[100] md:hidden flex items-center justify-between px-4 pointer-events-none"
-          style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 10px)', paddingBottom: '10px' }}
-        >
-          {/* Left: Menu icon — pill bg always visible */}
-          <div
-            className="pointer-events-auto rounded-xl"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.65)',
-              backdropFilter: 'blur(14px)',
-              WebkitBackdropFilter: 'blur(14px)',
-            }}
-          >
-            <Sheet open={isIndexDrawerOpen} onOpenChange={setIsIndexDrawerOpen}>
-              <SheetTrigger asChild>
-                <button
-                  className="h-9 w-9 rounded-xl flex items-center justify-center text-white transition-all active:scale-95"
-                  aria-label="Open Menu"
-                >
-                  <Menu className="h-5 w-5 stroke-[2.5]" />
-                </button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-full sm:w-72 p-0 h-screen border-none">
-                <NavigationDrawer onClose={() => setIsIndexDrawerOpen(false)} />
-              </SheetContent>
-            </Sheet>
-          </div>
-
-          {/* Right: Notification bell — pill bg always visible */}
-          <div
-            className="pointer-events-auto rounded-xl [&_button]:h-9 [&_button]:w-9 [&_button]:text-white"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.65)',
-              backdropFilter: 'blur(14px)',
-              WebkitBackdropFilter: 'blur(14px)',
-            }}
-          >
-            <NotificationBell />
-          </div>
-        </div>
-      )}
 
       {/* ─── Hero ──────────────────────────────────────────────────────────── */}
       {!isSearchFocused && (
