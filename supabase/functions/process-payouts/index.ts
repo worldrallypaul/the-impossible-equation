@@ -205,6 +205,9 @@ serve(async (req) => {
       // Use authenticated user ID instead of body-supplied user_id
       const user_id = claimsData.user.id;
       const { amount, payout_type, payment_method, mpesa_number, bank_code, account_number, account_name } = body;
+
+      if (!amount) {
+        throw new Error("amount is required");
       }
 
       if (!payment_method || !['mpesa', 'bank'].includes(payment_method)) {
