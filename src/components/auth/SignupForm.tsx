@@ -10,6 +10,7 @@ import { Eye, EyeOff, Sparkles, Mail, Loader2, ArrowLeft } from "lucide-react";
 import { PasswordStrength } from "@/components/ui/password-strength";
 import { generateStrongPassword } from "@/lib/passwordUtils";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { signInWithGoogleNative } from "@/lib/nativeGoogleAuth";
 
 const generateUserFriendlyId = (email: string): string => {
   const username = email.split("@")[0];
