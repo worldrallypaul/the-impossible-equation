@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import { PageLayout } from "@/components/PageLayout";
-
+import { Capacitor } from "@capacitor/core";
 
 import { TealLoader } from "@/components/ui/teal-loader";
 import { OfflineFullScreen } from "@/components/OfflineIndicator";
@@ -103,6 +103,36 @@ const App = () => {
     };
     window.addEventListener("unhandledrejection", handler);
     return () => window.removeEventListener("unhandledrejection", handler);
+  }, []);
+
+  // Android hardware back button handler
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    let cleanup: (() => void) | undefined;
+
+    import("@capacitor/app").then(({ App: CapApp }) => {
+      const listener = CapApp.addListener("backButton", ({ canGoBack }) => {
+        if (canGoBack) {
+          window.history.back();
+        } else {
+          CapApp.minimizeApp();
+        }
+      });
+
+      // listener may be a promise or direct object
+      if (listener && typeof (listener as any).remove === "function") {
+        cleanup = () => (listener as any).remove();
+      } else if (listener instanceof Promise) {
+        listener.then((handle) => {
+          cleanup = () => handle.remove();
+        });
+      }
+    });
+
+    return () => {
+      cleanup?.();
+    };
   }, []);
 
   return (
