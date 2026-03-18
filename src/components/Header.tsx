@@ -83,4 +83,4 @@ export const Header = ({ onSearchClick, showSearchIcon = true, className, __from
       </div>
     </header>
   );
-};
+}; 
