@@ -120,7 +120,6 @@ const App = () => {
         }
       });
 
-      // listener may be a promise or direct object
       if (listener && typeof (listener as any).remove === "function") {
         cleanup = () => (listener as any).remove();
       } else if (listener instanceof Promise) {
@@ -133,6 +132,19 @@ const App = () => {
     return () => {
       cleanup?.();
     };
+  }, []);
+
+  // Make status bar transparent so content flows underneath
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    import("@capacitor/status-bar").then(({ StatusBar, Style }) => {
+      StatusBar.setOverlaysWebView({ overlay: true });
+      StatusBar.setStyle({ style: Style.Light });
+      StatusBar.setBackgroundColor({ color: '#00000000' });
+    }).catch(() => {
+      // StatusBar plugin not available on this platform
+    });
   }, []);
 
   return (
