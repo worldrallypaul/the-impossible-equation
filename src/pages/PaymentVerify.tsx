@@ -5,6 +5,7 @@ import { CheckCircle2, XCircle, Loader2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BookingDownloadButton } from "@/components/booking/BookingDownloadButton";
 import { BookingPDFData } from "@/lib/pdfBookingExport";
+import { saveBookingLocally } from "@/hooks/useOfflineBookings";
 
 const COLORS = {
   TEAL: "#008080",
@@ -90,6 +91,33 @@ const PaymentVerify = () => {
 
     verifyPayment();
   }, [searchParams]);
+
+  useEffect(() => {
+    if (!bookingPDFData) return;
+
+    saveBookingLocally({
+      id: bookingPDFData.bookingId,
+      booking_type: bookingPDFData.bookingType,
+      total_amount: bookingPDFData.totalAmount,
+      booking_details: {
+        item_name: bookingPDFData.itemName,
+        adults: bookingPDFData.adults,
+        children: bookingPDFData.children,
+        facilities: bookingPDFData.facilities,
+        activities: bookingPDFData.activities,
+      },
+      payment_status: bookingPDFData.paymentStatus,
+      status: 'confirmed',
+      created_at: new Date().toISOString(),
+      guest_name: bookingPDFData.guestName,
+      guest_email: bookingPDFData.guestEmail,
+      guest_phone: bookingPDFData.guestPhone ?? null,
+      slots_booked: bookingPDFData.slotsBooked ?? null,
+      visit_date: bookingPDFData.visitDate,
+      item_id: bookingDetails?.bookingId ?? bookingPDFData.bookingId,
+      item_name: bookingPDFData.itemName,
+    });
+  }, [bookingPDFData, bookingDetails]);
 
   const handleGoToBookings = () => {
     navigate('/bookings');
