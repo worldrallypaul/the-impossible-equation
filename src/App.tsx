@@ -94,7 +94,9 @@ const queryClient = new QueryClient({
 const SuspenseFallback = () => {
   const isOnline = useOnlineStatus();
   if (!isOnline) return <OfflineFullScreen />;
-  return <TealLoader />;
+  // On web, don't show a full-screen loader/splash — render nothing so the
+  // Index page appears instantly while lazy chunks load in the background.
+  return null;
 };
 
 
