@@ -26,7 +26,7 @@ export async function signInWithGoogleNative() {
     });
 
     const googleUser = await GoogleAuth.signIn();
-    const idToken = googleUser.authentication?.idToken || googleUser.serverAuthCode || googleUser.idToken;
+    const idToken = googleUser.authentication?.idToken || googleUser.serverAuthCode || (googleUser as any).idToken;
     if (!idToken) {
       throw new Error('No ID token received from Google Sign-In');
     }
