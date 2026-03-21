@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { SignupForm } from "@/components/auth/SignupForm";
 import { SEOHead } from "@/components/SEOHead";
-import { ArrowLeft, MapPin, Shield, Star } from "lucide-react";
+import { ArrowLeft, Home, MapPin, Shield, Star } from "lucide-react";
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
@@ -90,7 +90,14 @@ const Auth = () => {
             <span className="text-sm font-medium">Back</span>
           </button>
           <img src="/fulllogo.png" alt="Realtravo" className="h-7 lg:hidden" />
-          <div className="w-16" />
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Home className="w-4 h-4" />
+            <span className="text-sm font-medium">Home</span>
+          </button>
         </div>
 
         {/* Form area */}

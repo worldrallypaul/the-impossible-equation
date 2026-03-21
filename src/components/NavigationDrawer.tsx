@@ -58,7 +58,8 @@ export const NavigationDrawer = ({ onClose }: NavigationDrawerProps) => {
   };
 
   const handleProtectedNavigation = (path: string) => {
-    window.location.href = user ? path : "/auth";
+    const publicGuestPaths = ["/bookings"];
+    window.location.href = user || publicGuestPaths.includes(path) ? path : "/auth";
     onClose();
   };
 

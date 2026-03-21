@@ -6,9 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Eye, EyeOff, Sparkles, Mail, Loader2, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Mail, Loader2, ArrowLeft } from "lucide-react";
 import { PasswordStrength } from "@/components/ui/password-strength";
-import { generateStrongPassword } from "@/lib/passwordUtils";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { signInWithGoogleNative } from "@/lib/nativeGoogleAuth";
 
@@ -162,14 +161,6 @@ export const SignupForm = () => {
     } finally {
       setResending(false);
     }
-  };
-
-  const handleGeneratePassword = () => {
-    const newPassword = generateStrongPassword();
-    setPassword(newPassword);
-    setConfirmPassword(newPassword);
-    setShowPassword(true);
-    setShowConfirmPassword(true);
   };
 
   const handleGoogleSignup = async () => {
@@ -332,17 +323,7 @@ export const SignupForm = () => {
         </div>
 
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="signup-password" className="text-sm font-medium text-foreground">Password</Label>
-            <button
-              type="button"
-              onClick={handleGeneratePassword}
-              className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
-            >
-              <Sparkles className="h-3 w-3" />
-              Generate
-            </button>
-          </div>
+          <Label htmlFor="signup-password" className="text-sm font-medium text-foreground">Password</Label>
           <div className="relative">
             <Input
               id="signup-password"

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -7,9 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Sparkles, Lock, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Lock, ShieldCheck, ArrowLeft } from "lucide-react";
 import { PasswordStrength } from "@/components/ui/password-strength";
-import { generateStrongPassword } from "@/lib/passwordUtils";
 
 const COLORS = {
   TEAL: "#008080",
@@ -39,15 +38,6 @@ const ResetPassword = () => {
     return { valid: true };
   };
 
-  const handleGeneratePassword = () => {
-    const newPassword = generateStrongPassword();
-    setPassword(newPassword);
-    setConfirmPassword(newPassword);
-    setShowPassword(true);
-    setShowConfirmPassword(true);
-    toast({ title: "Secure Password Generated!" });
-  };
-
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -67,7 +57,8 @@ const ResetPassword = () => {
     try {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
-      toast({ title: "Success!", description: "Password updated successfully." });
+      await supabase.auth.signOut({ scope: 'global' });
+      toast({ title: "Password updated", description: "Please sign in with your new password." });
       navigate("/auth");
     } catch (error: any) {
       setError(error.message);
@@ -111,19 +102,9 @@ const ResetPassword = () => {
           
           <form onSubmit={handleResetPassword} className="space-y-6">
             <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <Label className="text-[11px] font-black uppercase tracking-widest text-slate-500" htmlFor="password">
-                    Enter New Password
-                </Label>
-                <button
-                  type="button"
-                  onClick={handleGeneratePassword}
-                  className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-tighter text-[#FF7F50] hover:text-[#008080] transition-colors"
-                >
-                  <Sparkles className="h-3 w-3" />
-                  Generate Strong
-                </button>
-              </div>
+              <Label className="text-[11px] font-black uppercase tracking-widest text-slate-500" htmlFor="password">
+                  Enter New Password
+              </Label>
               
               <div className="relative group">
                 <Input

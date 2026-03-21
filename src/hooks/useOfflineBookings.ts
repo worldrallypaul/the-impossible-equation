@@ -24,6 +24,30 @@ interface CachedBooking {
 
 export type OfflineBookingRecord = CachedBooking;
 
+const sortBookingsByDate = (bookings: CachedBooking[]) =>
+  [...bookings].sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+
+const mergeBookings = (incoming: CachedBooking[], existing: CachedBooking[] = []): CachedBooking[] => {
+  const bookingMap = new Map<string, CachedBooking>();
+
+  [...existing, ...incoming].forEach((booking) => {
+    const current = bookingMap.get(booking.id);
+    bookingMap.set(booking.id, {
+      ...current,
+      ...booking,
+      booking_details: {
+        ...(current?.booking_details ?? {}),
+        ...(booking.booking_details ?? {}),
+      },
+      item_name: booking.item_name ?? current?.item_name,
+    });
+  });
+
+  return sortBookingsByDate(Array.from(bookingMap.values()));
+};
+
 const readCachedBookings = (): CachedBooking[] => {
   try {
     const raw = localStorage.getItem(BOOKINGS_CACHE_KEY);
@@ -36,10 +60,7 @@ const readCachedBookings = (): CachedBooking[] => {
 export const saveBookingLocally = (booking: CachedBooking) => {
   try {
     const existing = readCachedBookings();
-    const filtered = existing.filter((item) => item.id !== booking.id);
-    const next = [booking, ...filtered].sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
+    const next = mergeBookings([booking], existing);
     localStorage.setItem(BOOKINGS_CACHE_KEY, JSON.stringify(next));
   } catch (error) {
     console.error('Error saving booking locally:', error);
@@ -89,8 +110,9 @@ export const useOfflineBookings = () => {
   // Cache user bookings
   const cacheBookings = useCallback((bookings: CachedBooking[]) => {
     try {
-      localStorage.setItem(BOOKINGS_CACHE_KEY, JSON.stringify(bookings));
-      setCachedBookings(bookings);
+      const mergedBookings = mergeBookings(bookings, readCachedBookings());
+      localStorage.setItem(BOOKINGS_CACHE_KEY, JSON.stringify(mergedBookings));
+      setCachedBookings(mergedBookings);
     } catch (error) {
       console.error('Error caching bookings:', error);
     }

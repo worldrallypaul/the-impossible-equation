@@ -7,9 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Mail, Lock, Clock, Sparkles, AlertTriangle, Loader2, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Clock, AlertTriangle, Loader2, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { PasswordStrength } from "@/components/ui/password-strength";
-import { generateStrongPassword } from "@/lib/passwordUtils";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 const COLORS = {
@@ -99,8 +98,9 @@ const ForgotPassword = () => {
     try {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) throw error;
-      toast({ title: "Success!", description: "Password updated successfully." });
-      setTimeout(() => navigate("/auth"), 1500);
+      await supabase.auth.signOut({ scope: 'global' });
+      toast({ title: "Password updated", description: "Please log in with your new password." });
+      navigate("/auth");
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -196,13 +196,7 @@ const ForgotPassword = () => {
               
               <div className="space-y-4">
                 <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">New Password</Label>
-                        <button type="button" onClick={() => {
-                             const p = generateStrongPassword();
-                             setNewPassword(p); setConfirmPassword(p);
-                        }} className="text-[9px] font-black text-[#FF7F50] uppercase tracking-widest flex items-center gap-1"><Sparkles className="h-3 w-3"/> Auto-Generate</button>
-                    </div>
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">New Password</Label>
                   <div className="relative">
                     <Input 
                       type={showPassword ? "text" : "password"} 
