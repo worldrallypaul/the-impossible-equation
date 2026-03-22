@@ -144,7 +144,7 @@ const CompanyRegistration = () => {
         if (error) throw error;
       } else {
         companyPayload.user_id = user.id;
-        const { error } = await supabase.from("companies").insert(companyPayload);
+        const { error } = await supabase.from("companies").insert(companyPayload as any);
         if (error) throw error;
       }
 
