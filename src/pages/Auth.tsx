@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { SignupForm } from "@/components/auth/SignupForm";
 import { SEOHead } from "@/components/SEOHead";
+import { Header } from "@/components/Header";
 import { Home, MapPin, Shield, Star } from "lucide-react";
 
 const Auth = () => {
