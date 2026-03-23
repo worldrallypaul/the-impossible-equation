@@ -22,6 +22,7 @@ import { useRatings, sortByRating } from "@/hooks/useRatings";
 import { useRealtimeBookings } from "@/hooks/useRealtimeBookings";
 import { useResponsiveLimit } from "@/hooks/useResponsiveLimit";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import brandPaletteImage from "@/assets/brand-palette-card.png";
 
 // ─── Memoized horizontal scroll section ─────────────────────────────────────
 interface ScrollSectionProps {
@@ -416,7 +417,7 @@ const Index = () => {
   }, [position, ratings, savedItems, handleSave, bookingStats]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="brand-shell min-h-screen bg-background">
       <SEOHead
         title="Realtravo - Book Trips, Hotels & Adventures"
         description="Discover and book exciting trips, events, hotels, and adventure experiences. Your gateway to unforgettable travel."
@@ -443,9 +444,15 @@ const Index = () => {
             />
           </picture>
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80" />
+          <img
+            src={brandPaletteImage}
+            alt="Brand palette accent"
+            className="absolute right-[-8%] top-[12%] z-[1] w-[230px] max-w-[42vw] rotate-[-8deg] opacity-30 mix-blend-screen md:right-[6%] md:top-[10%] md:w-[320px]"
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,hsl(var(--accent)/0.22),transparent_26%),radial-gradient(circle_at_bottom_left,hsl(var(--popup-accent)/0.18),transparent_24%)]" />
 
           {/* Content - centered text + search */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center pb-20 md:pb-20 px-4">
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pb-20 md:pb-20 px-4">
             <div className="container mx-auto px-4 md:px-6">
               <p className="text-primary-foreground/70 text-xs md:text-sm font-semibold uppercase tracking-widest text-center mb-2">
                 {t('hero.tagline')}

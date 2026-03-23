@@ -133,7 +133,7 @@ const Profile = () => {
 
   if (fetchingProfile) {
     return (
-      <div className="min-h-screen bg-background pb-24">
+      <div className="brand-shell min-h-screen pb-24">
         <div className="px-4 pt-6 space-y-6 max-w-lg mx-auto">
           <Skeleton className="h-8 w-32" />
           <div className="flex flex-col items-center gap-4">
@@ -147,21 +147,21 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="brand-shell min-h-screen pb-24">
       {/* Top bar */}
-      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3 flex items-center justify-between">
-        <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-xl hover:bg-muted transition-colors active:scale-95">
-          <ArrowLeft className="h-5 w-5 text-foreground" />
+      <div className="sticky top-0 z-50 bg-primary/95 backdrop-blur-sm border-b border-border/50 px-4 py-3 flex items-center justify-between">
+        <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-xl hover:bg-primary-light transition-colors active:scale-95">
+          <ArrowLeft className="h-5 w-5 text-primary-foreground" />
         </button>
-        <h1 className="text-base font-bold text-foreground">My Profile</h1>
+        <h1 className="text-base font-bold text-primary-foreground">My Profile</h1>
         <div className="w-10" />
       </div>
 
       <div className="px-4 pt-6 max-w-lg mx-auto space-y-6">
         {/* Avatar Section */}
-        <div className="flex flex-col items-center gap-3">
+        <div className="brand-panel rounded-[28px] px-5 py-6 flex flex-col items-center gap-3">
           <div className="relative">
-            <div className="h-24 w-24 rounded-full bg-muted border-2 border-border overflow-hidden flex items-center justify-center">
+            <div className="h-24 w-24 rounded-full bg-primary/10 border-2 border-accent/20 overflow-hidden flex items-center justify-center">
               {profileData.profile_picture_url ? (
                 <img src={profileData.profile_picture_url} alt="Profile" className="h-full w-full object-cover" referrerPolicy="no-referrer" />
               ) : (
@@ -173,20 +173,20 @@ const Profile = () => {
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadingPhoto}
-              className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:brightness-110 transition-all active:scale-90"
+              className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full brand-icon-wrap flex items-center justify-center hover:brightness-110 transition-all active:scale-90"
             >
               <Camera className="h-4 w-4" />
             </button>
             <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
           </div>
           <div className="text-center">
-            <p className="text-lg font-bold text-foreground">{profileData.name || "Traveler"}</p>
+            <p className="text-lg font-black text-foreground">{profileData.name || "Traveler"}</p>
             <p className="text-sm text-muted-foreground">{profileData.email}</p>
           </div>
         </div>
 
         {/* Profile Fields - each with its own edit button */}
-        <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border">
+        <div className="brand-panel rounded-2xl overflow-hidden divide-y divide-border">
           <EditableProfileField
             label="Full Name"
             value={profileData.name}
@@ -263,12 +263,12 @@ const Profile = () => {
 
         {/* Security Section */}
         <div>
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 px-1">Security</p>
-          <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border">
+          <p className="text-xs font-black text-primary uppercase tracking-[0.22em] mb-2 px-1">Security</p>
+          <div className="brand-panel rounded-2xl overflow-hidden divide-y divide-border">
             <div className="px-4 py-3.5 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-muted">
-                  <Mail className="h-4 w-4 text-muted-foreground" />
+                <div className="brand-teal-chip p-2 rounded-xl">
+                  <Mail className="h-4 w-4" />
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Email</p>
@@ -278,11 +278,11 @@ const Profile = () => {
             </div>
             <button
               onClick={handleChangePassword}
-              className="w-full px-4 py-3.5 flex items-center justify-between hover:bg-muted/50 transition-all active:scale-[0.98]"
+            className="w-full px-4 py-3.5 flex items-center justify-between hover:bg-accent/5 transition-all active:scale-[0.98]"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-muted">
-                  <Lock className="h-4 w-4 text-muted-foreground" />
+                <div className="brand-accent-chip p-2 rounded-xl">
+                  <Lock className="h-4 w-4" />
                 </div>
                 <div className="text-left">
                   <p className="text-sm font-medium text-foreground">Change Password</p>
@@ -311,11 +311,11 @@ interface EditableProfileFieldProps {
 const EditableProfileField = ({ label, value, isEditing, isSaving, onEdit, onSave, onCancel, children }: EditableProfileFieldProps) => (
   <div className="px-4 py-3.5">
     <div className="flex items-center justify-between mb-1">
-      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="text-xs text-muted-foreground uppercase tracking-wide">{label}</p>
       {!isEditing ? (
         <button
           onClick={onEdit}
-          className="flex items-center gap-1 text-xs text-primary font-medium hover:underline active:scale-95 transition-all"
+          className="flex items-center gap-1 text-xs text-accent font-semibold hover:underline active:scale-95 transition-all"
         >
           <Pencil className="h-3 w-3" />
           Edit
@@ -331,7 +331,7 @@ const EditableProfileField = ({ label, value, isEditing, isSaving, onEdit, onSav
           <button
             onClick={onSave}
             disabled={isSaving}
-            className="p-1 rounded-lg hover:bg-primary/10 transition-colors text-primary disabled:opacity-50"
+            className="p-1 rounded-lg hover:bg-accent/10 transition-colors text-accent disabled:opacity-50"
           >
             <Check className="h-3.5 w-3.5" />
           </button>

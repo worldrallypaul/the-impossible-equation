@@ -58,6 +58,7 @@ All colors MUST be HSL.
     --shadow-soft: 0 2px 8px hsla(240, 26%, 14%, 0.08);
     --shadow-medium: 0 8px 18px hsla(240, 26%, 14%, 0.12);
     --shadow-elevated: 0 16px 36px hsla(348, 79%, 60%, 0.24);
+    --shadow-brand: 0 18px 40px hsla(240, 26%, 14%, 0.18);
     
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -76,6 +77,13 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 348 79% 60%;
+
+    --surface-soft: 233 33% 98%;
+    --surface-strong: 240 26% 14%;
+    --surface-accent: 348 79% 60%;
+    --surface-teal: 180 100% 25%;
+    --gradient-brand: linear-gradient(135deg, hsl(var(--primary-dark)) 0%, hsl(var(--primary)) 42%, hsl(var(--accent)) 100%);
+    --gradient-brand-soft: radial-gradient(circle at top left, hsl(var(--accent) / 0.22), transparent 38%), radial-gradient(circle at bottom right, hsl(var(--popup-accent) / 0.18), transparent 34%), linear-gradient(180deg, hsl(var(--surface-soft)), hsl(var(--background)));
   }
 
 }
@@ -88,6 +96,8 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     padding-top: env(safe-area-inset-top, 0px);
+    background-image: var(--gradient-brand-soft);
+    background-attachment: fixed;
   }
   
   /* Hide scrollbar for horizontal scroll sections */
@@ -98,5 +108,58 @@ All colors MUST be HSL.
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+}
+
+@layer utilities {
+  .brand-shell {
+    background-image: var(--gradient-brand-soft);
+  }
+
+  .brand-panel {
+    background: hsl(var(--card) / 0.92);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-brand);
+    backdrop-filter: blur(14px);
+  }
+
+  .brand-card {
+    background:
+      linear-gradient(180deg, hsl(var(--card) / 0.98), hsl(var(--surface-soft) / 0.96));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-soft);
+  }
+
+  .brand-card-strong {
+    background: var(--gradient-brand);
+    color: hsl(var(--primary-foreground));
+    box-shadow: var(--shadow-brand);
+  }
+
+  .brand-icon-wrap {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 10px 24px hsla(348, 79%, 60%, 0.18);
+  }
+
+  .brand-teal-chip {
+    background: hsl(var(--popup-accent) / 0.12);
+    color: hsl(var(--popup-accent));
+    border: 1px solid hsl(var(--popup-accent) / 0.2);
+  }
+
+  .brand-accent-chip {
+    background: hsl(var(--accent) / 0.12);
+    color: hsl(var(--accent));
+    border: 1px solid hsl(var(--accent) / 0.18);
+  }
+
+  .brand-grid-bg {
+    background-image:
+      linear-gradient(hsl(var(--primary) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.05) 1px, transparent 1px),
+      var(--gradient-brand-soft);
+    background-size: 28px 28px, 28px 28px, cover;
+    background-position: center;
   }
 }

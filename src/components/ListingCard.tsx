@@ -119,7 +119,7 @@ const ListingCardComponent = ({
   const urgencyBadge = useMemo(() => {
     if (isSoldOut) return { text: "Sold out", color: "bg-destructive/10 text-destructive border-destructive/20" };
     if (isOutdated) return { text: "Passed", color: "bg-muted text-muted-foreground border-border" };
-    if (fewSlotsRemaining) return { text: `🔥 Only ${remainingTickets} left!`, color: "bg-orange-50 text-orange-700 border-orange-200" };
+    if (fewSlotsRemaining) return { text: `🔥 Only ${remainingTickets} left!`, color: "brand-accent-chip" };
     return null;
   }, [isSoldOut, isOutdated, fewSlotsRemaining, remainingTickets]);
 
@@ -140,9 +140,9 @@ const ListingCardComponent = ({
     <Card
       onClick={handleCardClick}
       className={cn(
-        "group relative flex flex-row md:flex-col overflow-hidden cursor-pointer bg-card transition-all duration-300",
+        "brand-panel group relative flex flex-row md:flex-col overflow-hidden cursor-pointer transition-all duration-300",
         "rounded-xl border border-border shadow-sm",
-        "hover:shadow-md hover:border-primary/20",
+        "hover:shadow-md hover:border-accent/30",
         compact ? "h-auto" : "h-full",
         isUnavailable && "opacity-80"
       )}
@@ -180,7 +180,7 @@ const ListingCardComponent = ({
             onClick={handleSaveClick}
             className={cn(
               "absolute right-2 top-2 z-20 flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-90",
-              isSavedLocal ? "bg-card shadow-sm" : "bg-black/20 backdrop-blur-sm hover:bg-card/80"
+               isSavedLocal ? "bg-card shadow-sm" : "bg-primary/30 backdrop-blur-sm hover:bg-card/80"
             )}
           >
             <Heart className={cn("h-4 w-4 transition-colors", isSavedLocal ? "fill-rose-500 text-rose-500" : "text-white")} />
@@ -228,7 +228,7 @@ const ListingCardComponent = ({
 
         {/* Location */}
         <div className="flex items-center gap-1 text-muted-foreground">
-          <MapPin className="h-3 w-3 flex-shrink-0 text-primary/60" />
+          <MapPin className="h-3 w-3 flex-shrink-0 text-popup-accent" />
           <span className="text-[11px] font-medium truncate capitalize">{locationString.toLowerCase()}</span>
         </div>
 
@@ -238,7 +238,7 @@ const ListingCardComponent = ({
             {/* Rating */}
             {avgRating != null && avgRating > 0 && (
               <div className="flex items-center gap-0.5 flex-shrink-0">
-                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+              <Star className="h-3 w-3 fill-accent text-accent" />
                 <span className="text-[11px] font-bold text-foreground">{avgRating.toFixed(1)}</span>
                 {reviewCount != null && reviewCount > 0 && (
                   <span className="text-[9px] text-muted-foreground">({reviewCount})</span>
