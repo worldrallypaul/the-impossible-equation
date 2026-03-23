@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Header } from "@/components/Header";
-import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { ListingCard } from "@/components/ListingCard";
 import { ListingSkeleton } from "@/components/ui/listing-skeleton";
 import { useSavedItems } from "@/hooks/useSavedItems";
@@ -95,12 +93,12 @@ const CompanyBrowse = () => {
     : [];
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3 flex items-center gap-3">
-        <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-xl hover:bg-muted transition-colors active:scale-95">
-          <ArrowLeft className="h-5 w-5 text-foreground" />
+    <div className="brand-grid-bg min-h-screen pb-24">
+      <div className="sticky top-0 z-50 bg-primary/95 backdrop-blur-sm border-b border-border/50 px-4 py-3 flex items-center gap-3">
+        <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-xl hover:bg-primary-light transition-colors active:scale-95">
+          <ArrowLeft className="h-5 w-5 text-primary-foreground" />
         </button>
-        <h1 className="text-base font-bold text-foreground">Companies</h1>
+        <h1 className="text-base font-bold text-primary-foreground">Companies</h1>
       </div>
 
       <div className="px-4 pt-4 max-w-5xl mx-auto">
@@ -116,13 +114,13 @@ const CompanyBrowse = () => {
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 onFocus={() => setShowSuggestions(true)}
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                className="pl-10 h-11 rounded-xl"
+                className="pl-10 h-11 rounded-xl brand-panel"
               />
             </div>
             <Button onClick={() => handleSearch()} className="h-11 rounded-xl px-6">Search</Button>
           </div>
           {showSuggestions && suggestions.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-xl shadow-lg z-10 overflow-hidden">
+            <div className="absolute top-full left-0 right-0 mt-1 brand-panel rounded-xl z-10 overflow-hidden">
               {suggestions.map((name, i) => (
                 <button
                   key={i}
@@ -155,16 +153,16 @@ const CompanyBrowse = () => {
                 <button
                   key={company.id}
                   onClick={() => navigate(`/company/${encodeURIComponent(company.company_name)}`)}
-                  className="bg-card rounded-2xl border border-border p-4 text-left hover:shadow-md transition-all active:scale-[0.98] group"
+                  className="brand-panel rounded-2xl p-4 text-left hover:shadow-md transition-all active:scale-[0.98] group"
                 >
-                  <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden mx-auto mb-3 border border-primary/20">
+                  <div className="h-14 w-14 rounded-full brand-icon-wrap flex items-center justify-center overflow-hidden mx-auto mb-3 border border-primary/20">
                     {company.profile_photo_url ? (
                       <img src={company.profile_photo_url} alt={company.company_name} className="h-full w-full object-cover" />
                     ) : (
-                      <Building2 className="h-6 w-6 text-primary" />
+                      <Building2 className="h-6 w-6" />
                     )}
                   </div>
-                  <p className="text-sm font-semibold text-foreground text-center truncate">{company.company_name}</p>
+                  <p className="text-sm font-black text-foreground text-center truncate">{company.company_name}</p>
                   {company.country && (
                     <p className="text-xs text-muted-foreground text-center mt-0.5">{company.country}</p>
                   )}
@@ -238,8 +236,8 @@ const CompanyDetail = ({ companyName }: { companyName: string }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background pb-24">
-        <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3 flex items-center gap-3">
+      <div className="brand-grid-bg min-h-screen pb-24">
+        <div className="sticky top-0 z-50 bg-primary/95 backdrop-blur-sm border-b border-border/50 px-4 py-3 flex items-center gap-3">
           <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-xl hover:bg-muted"><ArrowLeft className="h-5 w-5" /></button>
           <Skeleton className="h-5 w-32" />
         </div>
@@ -255,10 +253,10 @@ const CompanyDetail = ({ companyName }: { companyName: string }) => {
 
   if (!company) {
     return (
-      <div className="min-h-screen bg-background pb-24">
-        <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3 flex items-center gap-3">
+      <div className="brand-grid-bg min-h-screen pb-24">
+        <div className="sticky top-0 z-50 bg-primary/95 backdrop-blur-sm border-b border-border/50 px-4 py-3 flex items-center gap-3">
           <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-xl hover:bg-muted"><ArrowLeft className="h-5 w-5" /></button>
-          <h1 className="text-base font-bold">Company</h1>
+          <h1 className="text-base font-bold text-primary-foreground">Company</h1>
         </div>
         <div className="px-4 pt-16 text-center">
           <Building2 className="h-12 w-12 mx-auto text-muted-foreground/40 mb-3" />
@@ -271,23 +269,23 @@ const CompanyDetail = ({ companyName }: { companyName: string }) => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3 flex items-center gap-3">
-        <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-xl hover:bg-muted transition-colors active:scale-95">
-          <ArrowLeft className="h-5 w-5 text-foreground" />
+    <div className="brand-grid-bg min-h-screen pb-24">
+      <div className="sticky top-0 z-50 bg-primary/95 backdrop-blur-sm border-b border-border/50 px-4 py-3 flex items-center gap-3">
+        <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-xl hover:bg-primary-light transition-colors active:scale-95">
+          <ArrowLeft className="h-5 w-5 text-primary-foreground" />
         </button>
-        <h1 className="text-base font-bold text-foreground truncate">{company.company_name}</h1>
+        <h1 className="text-base font-bold text-primary-foreground truncate">{company.company_name}</h1>
       </div>
 
       <div className="px-4 pt-6 max-w-5xl mx-auto">
         {/* Company Header */}
-        <div className="bg-card rounded-2xl p-5 border border-border mb-6">
+        <div className="brand-panel rounded-2xl p-5 mb-6">
           <div className="flex items-center gap-4">
-            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden border-2 border-primary/20 shrink-0">
+            <div className="h-16 w-16 rounded-full brand-icon-wrap flex items-center justify-center overflow-hidden border-2 border-primary/20 shrink-0">
               {company.profile_photo_url ? (
                 <img src={company.profile_photo_url} alt={company.company_name} className="h-full w-full object-cover" />
               ) : (
-                <Building2 className="h-7 w-7 text-primary" />
+                <Building2 className="h-7 w-7" />
               )}
             </div>
             <div className="flex-1 min-w-0">
