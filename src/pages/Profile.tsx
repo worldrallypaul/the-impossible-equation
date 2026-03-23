@@ -128,19 +128,7 @@ const Profile = () => {
   };
 
   const handleChangePassword = async () => {
-    if (!profileData.email) {
-      toast({ title: "No email", description: "No email associated with this account", variant: "destructive" });
-      return;
-    }
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(profileData.email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      });
-      if (error) throw error;
-      toast({ title: "Email sent", description: "Check your email for a password reset link" });
-    } catch (error: any) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
-    }
+    navigate("/forgot-password");
   };
 
   if (fetchingProfile) {
@@ -298,7 +286,7 @@ const Profile = () => {
                 </div>
                 <div className="text-left">
                   <p className="text-sm font-medium text-foreground">Change Password</p>
-                  <p className="text-xs text-muted-foreground">We'll send a reset link to your email</p>
+                  <p className="text-xs text-muted-foreground">Confirm current password, then verify the code sent to your email</p>
                 </div>
               </div>
             </button>

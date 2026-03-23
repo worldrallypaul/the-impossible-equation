@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Header } from "@/components/Header";
@@ -8,22 +8,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Mail, Lock, AlertTriangle, Loader2, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, AlertTriangle, Loader2, CheckCircle2, ShieldCheck } from "lucide-react";
 import { PasswordStrength } from "@/components/ui/password-strength";
 import { useAuth } from "@/contexts/AuthContext";
-
-const COLORS = {
-  TEAL: "#008080",
-  CORAL: "#FF7F50",
-  CORAL_LIGHT: "#FF9E7A",
-};
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 const ForgotPassword = () => {
-  const [step, setStep] = useState<'email' | 'sent'>('email');
+  const { user } = useAuth();
+  const [step, setStep] = useState<'email' | 'sent' | 'credentials' | 'code'>(user ? 'credentials' : 'email');
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [pendingPassword, setPendingPassword] = useState("");
+  const [resendCountdown, setResendCountdown] = useState(0);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -31,7 +30,19 @@ const ForgotPassword = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user } = useAuth();
+
+  useEffect(() => {
+    setStep((prev) => {
+      if (user) return prev === 'code' ? 'code' : 'credentials';
+      return prev === 'sent' ? 'sent' : 'email';
+    });
+  }, [user]);
+
+  useEffect(() => {
+    if (resendCountdown <= 0) return;
+    const timer = window.setTimeout(() => setResendCountdown((value) => value - 1), 1000);
+    return () => window.clearTimeout(timer);
+  }, [resendCountdown]);
 
   const validatePassword = (pwd: string): { valid: boolean; message?: string } => {
     if (pwd.length < 8) return { valid: false, message: "Password must be at least 8 characters long" };
@@ -59,7 +70,7 @@ const ForgotPassword = () => {
     }
   };
 
-  const handleAuthenticatedPasswordChange = async (e: React.FormEvent) => {
+  const handleRequestPasswordCode = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -87,12 +98,80 @@ const ForgotPassword = () => {
       });
       if (signInError) throw new Error("Current password is incorrect");
 
-      const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+      const { error: otpError } = await supabase.auth.signInWithOtp({
+        email: user.email,
+        options: {
+          shouldCreateUser: false,
+        },
+      });
+      if (otpError) throw otpError;
+
+      setPendingPassword(newPassword);
+      setVerificationCode("");
+      setCurrentPassword("");
+      setStep('code');
+      setResendCountdown(60);
+      toast({ title: "Code sent", description: "Enter the 6-digit code sent to your email to save the new password." });
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyPasswordCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (!user?.email || !pendingPassword) {
+      setError("Start again and request a new code");
+      setStep('credentials');
+      return;
+    }
+
+    if (verificationCode.length !== 6) {
+      setError("Enter the full 6-digit code");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        email: user.email,
+        token: verificationCode,
+        type: 'email',
+      });
+      if (verifyError) throw verifyError;
+
+      const { error: updateError } = await supabase.auth.updateUser({ password: pendingPassword });
       if (updateError) throw updateError;
 
       await supabase.auth.signOut({ scope: 'global' });
-      toast({ title: "Password updated", description: "Please log in with your new password." });
+      setPendingPassword("");
+      setVerificationCode("");
+      setNewPassword("");
+      setConfirmPassword("");
+      toast({ title: "Password updated", description: "Changes saved successfully. Log in with your new password." });
       navigate("/auth");
+    } catch (error: any) {
+      setError(error.message || "The code is incorrect");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendPasswordCode = async () => {
+    if (!user?.email || resendCountdown > 0) return;
+    setLoading(true);
+    setError("");
+    try {
+      const { error: otpError } = await supabase.auth.signInWithOtp({
+        email: user.email,
+        options: { shouldCreateUser: false },
+      });
+      if (otpError) throw otpError;
+      setResendCountdown(60);
+      toast({ title: "Code resent", description: "Check your email for the new code." });
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -119,61 +198,120 @@ const ForgotPassword = () => {
       <main className="container px-4 pt-12 max-w-lg mx-auto relative z-10">
         <div className="bg-card rounded-[32px] p-8 md:p-10 shadow-2xl border border-border transition-all duration-500">
           {user ? (
-            <form onSubmit={handleAuthenticatedPasswordChange} className="space-y-5">
-              <AuthHeader icon={Lock} title="Change Password" subtitle="Confirm your current password, then set a new one" />
+            step === 'code' ? (
+              <form onSubmit={handleVerifyPasswordCode} className="space-y-6">
+                <AuthHeader icon={ShieldCheck} title="Confirm Code" subtitle="We emailed a 6-digit code. Enter it to save your new password." />
 
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Current Password</Label>
-                <div className="relative">
-                  <Input
-                    type={showCurrentPassword ? "text" : "password"}
-                    className="rounded-2xl border-border bg-muted/50 h-14 pr-12"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    required
-                  />
-                  <button type="button" onClick={() => setShowCurrentPassword(!showCurrentPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                    {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
+                <div className="rounded-2xl border border-border bg-muted/40 px-4 py-3 text-center">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Code sent to</p>
+                  <p className="mt-1 text-sm font-semibold text-foreground break-all">{user.email}</p>
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">New Password</Label>
-                <div className="relative">
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    className="rounded-2xl border-border bg-muted/50 h-14 pr-12"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    required
-                  />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
+                <div className="space-y-3">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Verification Code</Label>
+                  <div className="flex justify-center">
+                    <InputOTP
+                      maxLength={6}
+                      value={verificationCode}
+                      onChange={(value) => setVerificationCode(value.replace(/\D/g, ""))}
+                    >
+                      <InputOTPGroup className="gap-2">
+                        <InputOTPSlot index={0} className="h-12 w-12 rounded-xl border border-input" />
+                        <InputOTPSlot index={1} className="h-12 w-12 rounded-xl border border-input" />
+                        <InputOTPSlot index={2} className="h-12 w-12 rounded-xl border border-input" />
+                        <InputOTPSlot index={3} className="h-12 w-12 rounded-xl border border-input" />
+                        <InputOTPSlot index={4} className="h-12 w-12 rounded-xl border border-input" />
+                        <InputOTPSlot index={5} className="h-12 w-12 rounded-xl border border-input" />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </div>
                 </div>
-                <PasswordStrength password={newPassword} />
-              </div>
 
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Confirm Password</Label>
-                <div className="relative">
-                  <Input
-                    type={showConfirmPassword ? "text" : "password"}
-                    className="rounded-2xl border-border bg-muted/50 h-14"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                  />
-                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
+                {error && <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center gap-2 text-destructive text-[10px] font-bold uppercase tracking-tight"><AlertTriangle className="h-4 w-4" /> {error}</div>}
+
+                <PrimaryButton loading={loading} text="Save New Password" disabled={verificationCode.length !== 6} />
+
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setError("");
+                      setVerificationCode("");
+                      setStep('credentials');
+                    }}
+                    className="flex-1 rounded-2xl h-12 font-bold uppercase text-[10px] tracking-widest"
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    disabled={loading || resendCountdown > 0}
+                    onClick={handleResendPasswordCode}
+                    className="flex-1 rounded-2xl h-12 font-bold uppercase text-[10px] tracking-widest text-primary hover:text-primary"
+                  >
+                    {resendCountdown > 0 ? `Resend in ${resendCountdown}s` : "Resend Code"}
+                  </Button>
                 </div>
-              </div>
+              </form>
+            ) : (
+              <form onSubmit={handleRequestPasswordCode} className="space-y-5">
+                <AuthHeader icon={Lock} title="Change Password" subtitle="Enter your current password, then confirm the new one twice." />
 
-              {error && <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center gap-2 text-destructive text-[10px] font-bold uppercase tracking-tight"><AlertTriangle className="h-4 w-4" /> {error}</div>}
-              <PrimaryButton loading={loading} text="Change Password" disabled={!currentPassword || !newPassword || newPassword !== confirmPassword || !validatePassword(newPassword).valid} />
-            </form>
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Current Password</Label>
+                  <div className="relative">
+                    <Input
+                      type={showCurrentPassword ? "text" : "password"}
+                      className="rounded-2xl border-border bg-muted/50 h-14 pr-12"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      required
+                    />
+                    <button type="button" onClick={() => setShowCurrentPassword(!showCurrentPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+                      {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">New Password</Label>
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      className="rounded-2xl border-border bg-muted/50 h-14 pr-12"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      required
+                    />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  <PasswordStrength password={newPassword} />
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Confirm New Password</Label>
+                  <div className="relative">
+                    <Input
+                      type={showConfirmPassword ? "text" : "password"}
+                      className="rounded-2xl border-border bg-muted/50 h-14 pr-12"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                    />
+                    <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {error && <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center gap-2 text-destructive text-[10px] font-bold uppercase tracking-tight"><AlertTriangle className="h-4 w-4" /> {error}</div>}
+                <PrimaryButton loading={loading} text="Send Verification Code" disabled={!currentPassword || !newPassword || newPassword !== confirmPassword || !validatePassword(newPassword).valid} />
+              </form>
+            )
           ) : (
             <>
               {step === 'email' && (
@@ -238,11 +376,7 @@ const PrimaryButton = ({ text, loading, disabled }: { text: string, loading?: bo
   <Button 
     type="submit" 
     disabled={disabled || loading}
-    className="w-full py-8 rounded-2xl text-md font-black uppercase tracking-[0.2em] text-white shadow-xl transition-all active:scale-95 border-none"
-    style={{ 
-        background: `linear-gradient(135deg, ${COLORS.CORAL_LIGHT} 0%, ${COLORS.CORAL} 100%)`,
-        boxShadow: `0 12px 24px -8px ${COLORS.CORAL}88`
-    }}
+    className="w-full py-8 rounded-2xl text-md font-black uppercase tracking-[0.2em] text-primary-foreground shadow-[var(--shadow-elevated)] transition-all active:scale-95 border-none bg-[image:var(--gradient-primary)] hover:brightness-110"
   >
     {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : text}
   </Button>
