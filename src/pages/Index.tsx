@@ -97,11 +97,11 @@ ScrollSection.displayName = "ScrollSection";
 
 // ─── Category pill data ──────────────────────────────────────────────────────
 const CATEGORIES = [
-  { icon: Tent, title: "Adventures", path: "/category/campsite", color: "hsl(142, 70%, 35%)", bgClass: "bg-emerald-600" },
-  { icon: Hotel, title: "Hotels", path: "/category/hotels", color: "hsl(220, 70%, 50%)", bgClass: "bg-blue-600" },
-  { icon: Calendar, title: "Trips", path: "/category/trips", color: "hsl(25, 90%, 50%)", bgClass: "bg-orange-500" },
-  { icon: Compass, title: "Events", path: "/category/events", color: "hsl(340, 75%, 50%)", bgClass: "bg-rose-600" },
-  { icon: Home, title: "Stays", path: "/category/accommodation", color: "hsl(270, 60%, 50%)", bgClass: "bg-purple-600" },
+  { icon: Tent, title: "Adventures", path: "/category/campsite", color: "hsl(142, 70%, 35%)", bgClass: "bg-emerald-600", image: "/images/category-campsite.webp" },
+  { icon: Hotel, title: "Hotels", path: "/category/hotels", color: "hsl(220, 70%, 50%)", bgClass: "bg-blue-600", image: "/images/category-hotels.webp" },
+  { icon: Calendar, title: "Trips", path: "/category/trips", color: "hsl(25, 90%, 50%)", bgClass: "bg-orange-500", image: "/images/category-trips.webp" },
+  { icon: Compass, title: "Events", path: "/category/events", color: "hsl(340, 75%, 50%)", bgClass: "bg-rose-600", image: "/images/category-events.webp" },
+  { icon: Home, title: "Stays", path: "/category/accommodation", color: "hsl(270, 60%, 50%)", bgClass: "bg-purple-600", image: "/images/category-hotels.webp" },
 ];
 
 // ─── Quick navigation cards (above footer) ───────────────────────────────────
